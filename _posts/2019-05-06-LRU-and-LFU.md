@@ -1,7 +1,7 @@
 ---
 layout: post
-title: [LeetCode解题] LRU和LFU详解
-tags: [docker]
+title: LeetCode专题-LRU和LFU详解
+tags: [leecode,LRU,LFU]
 bigimg: /img/path.jpg
 comments: true
 ---

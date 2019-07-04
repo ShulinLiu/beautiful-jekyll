@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 在Mac上安装MySQL
-tags: [docker]
+tags: [mysql]
 bigimg: /img/path.jpg
 comments: true
 ---
