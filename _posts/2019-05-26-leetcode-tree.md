@@ -32,7 +32,7 @@ Output: [1,3,2]
 Follow up: Recursive solution is trivial, could you do it iteratively?
 ```
 解法如下，主要利用了stack。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -83,7 +83,7 @@ Given n = 3, there are a total of 5 unique BST's:
 
 ```
 本题要求给出能够存储整数1到n的BST的个数。解题思路是运用DP动态规划。
-```
+```go
 func numTrees(n int) int {
     if n == 0{
         return 0
@@ -130,7 +130,7 @@ The above output corresponds to the 5 unique BST's shown below:
 
 ```
 本题要求列出所有可能的BST。对于这类问题，主要的思路是DFS。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -207,7 +207,7 @@ Output: false
 Explanation: The root node's value is 5 but its right child's value is 4.
 ```
 本题要求判断一颗tree是否为二叉搜索树。根据二叉搜索树的定义，只要满足任何一个节点的左节点的值小于该节点的值，右节点的值都大于该节点的值即可。回忆一下二叉树的遍历，根据二叉搜索树的中序遍历是有序的特点，在这里我们采用中序遍历遍历整棵树，并判断其值是否有序，便可得到本题的解。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -292,7 +292,7 @@ Follow up:
     Could you devise a constant space solution?
 ```
 本题依然是采用中序遍历，主要是找到两个错序的节点，交换两个节点的值即可。O(n)空间的解法如下：
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -370,7 +370,7 @@ Input:     1         1
 Output: false
 ```
 本题要求判断两棵树是否为相同的树，采用递归判断即可，解法如下：
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -419,7 +419,7 @@ Note:
 Bonus points if you could solve it both recursively and iteratively.
 ```
 本题与上题类似，也可以采取递归来判断。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -471,7 +471,7 @@ return its level order traversal as:
 ]
 ```
 这里给出树的层序遍历的非递归实现，主要是要利用queue结构。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -528,7 +528,7 @@ return its zigzag level order traversal as:
 ]
 ```
 本题是树的层序遍历的一个应用，要求每一层以不同的顺序打印。这里只需要考虑不同层的打印顺序与层数之间的关系即可。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -593,7 +593,7 @@ Given binary tree [3,9,20,null,null,15,7],
 return its depth = 3.
 ```
 本题要求二叉树的最大高度。与大多数与树有关的题目类似，主要采用递归方法来实现。
-```
+```go
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {

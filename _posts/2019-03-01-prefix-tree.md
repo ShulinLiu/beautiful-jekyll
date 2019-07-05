@@ -38,7 +38,7 @@ Note:
 
 其中，采用动态数组时，需要注意一定要在节点的析构函数中删除子节点的指针，以免内存泄漏。
 
-```
+```c++
 class Trie {
 private:
     struct TrieNode
@@ -57,7 +57,7 @@ private:
 
     std::unique_ptr<TrieNode> _root;
 ```
-```
+```c++
 class Trie {
 private：
     struct TrieNode {
@@ -76,7 +76,7 @@ private：
     };
 ```
 insert方法的实现很简单：
-```
+```c++
     /** Inserts a word into the trie. */
     void insert(const string& word) {
         TrieNode* p = root_.get();
@@ -89,7 +89,7 @@ insert方法的实现很简单：
     }
 ```
 最后，实现search和startsWith，我们添加一个辅助函数find寻找子节点。
-```
+```c++
     const TrieNode* find(const string& prefix) const {
         const TrieNode* p = root_.get();
         for (const char c : prefix) {
