@@ -32,7 +32,7 @@ Output: [1,3,2]
 Follow up: Recursive solution is trivial, could you do it iteratively?
 ```
 解法如下，主要利用了stack。
-```go
+{% highlight go linenos %} 
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -62,7 +62,8 @@ func inorderTraversal(root *TreeNode) (ret []int) {
     }
     return
 }
-```
+{% endhighlight %}
+
 # 96. Unique Binary Search Trees
 题目描述：
 ```
