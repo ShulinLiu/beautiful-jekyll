@@ -27,7 +27,7 @@ LRU和LFU具备的操作主要是：`get` and `put`.
 为了快速找到最早更新的节点，可选的数据结构有：queue，heap，linked list。由于题目又要求快速访问指定节点，并且在访问之后要更新它的时间顺序，queue和heap不太适用。因此考虑使用linked list，这里我们选用double linked list，简化节点的删除操作，实现O(1)的删除效率。并用hash table以便实现O(logn)时间随机访问节点。
 
 首先是双链表的节点定义：
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
 struct Node{
         Node *pre;
         Node *next;
@@ -38,7 +38,7 @@ struct Node{
 {% endhighlight %}
 
 使用map将key与相应的节点对应起来，实现以O(logn)时间随机访问linked list中的相应节点，并进行删除更新等相关操作。另外在构造函数中还需指定capacity的大小：
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
 class LRUCache {
 public：
 LRUCache(int capacity) {
@@ -56,7 +56,7 @@ private:
 {% endhighlight %}
 
 下面设计辅助函数。由于我们将节点按照使用的时间顺序插入double linked list当中，所以头节点是最少最近使用的节点，而尾节点是最近使用的节点。因此首先设计三个函数：删除头节点：removeHead()以及插入新节点：insertToEnd(int k, int v)，以及更新已存在节点在双链表中的顺序：moveToEnd(int key)。
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
     void insertToEnd(int k, int v){
         //if full or already exist, return
         if(isFull()||keyToNode.count(k)!=0) return;
@@ -112,7 +112,7 @@ private:
 {% endhighlight %}
 
 `get(int key)`函数的设计比较简单，直接查找map中key值是否存在，如果不存在返回-1，反之，更新节点位置到链表尾端并返回其值即可。
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
     int get(int key) {
         if(keyToNode.count(key) == 0) return -1;
         //如果存在，将节点更新到链表尾端
@@ -123,7 +123,7 @@ private:
 
  `put(int key, int value)`分为以下情况：1.如果节点存在，只需要更新节点的值并更新节点在链表中的位置(moveToEnd)即可。这里我们使用get函数判断节点是否存在，则可以省略moveToEnd操作。2.如果节点不存在，则插入节点前需要判断是否溢出，如果溢出，则先将头节点删除再在尾节点插入新节点即可。
 
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
     void put(int key, int value) {
         //if already exist, update value
         if(get(key)!=-1){
@@ -144,7 +144,7 @@ private:
 根据以上的分析，首先我们需要在节点上增加一个变量freq记录节点的频率。其次，除了LRU中key与Node的map之外，对于每一个频率值，我们还需要一个list 来记录在这一频率值下的节点。因此我们增加一个频率与list的map：freqMap。另外，为了迅速找到并删除节点，我们在Node结构中增加iterator，记录frequency list的头部。
 
 节点的定义和LFU的结构如下：
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
 struct Node{
         int val;
         int freq;
@@ -154,7 +154,7 @@ struct Node{
     };
 {% endhighlight %}
 
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
 class LFUCache {
 public:
     LFUCache(int capacity) {
@@ -170,7 +170,7 @@ private:
 {% endhighlight %}
 
 `get(int key)`函数的设计与LRU中get函数类似。需要注意的是这里更新节点不再是将节点移到到链表尾部，而是更新节点的freq,将原节点从以前的freq list中移除，添加到新的freq list前端，最后更新节点的iterator。
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
     int get(int key) {
         //if not exist
         if(cacheMap.find(key) == cacheMap.end()) return -1;
@@ -189,7 +189,7 @@ private:
 {% endhighlight %}
  `put(int key, int value)`的设计同样需要注意对freq list的处理。
 
-{% highlight c++ linenos %} 
+{% highlight c++ linenos %}
     void put(int key, int value) {
         if(capacity <= 0) return;
         
