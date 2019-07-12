@@ -262,3 +262,144 @@ public:
     }
 };
 {% endhighlight %}
+
+## 数组中的逆序对
+
+题目描述：
+```
+在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组,求出这个数组中的逆序对的总数P。并将P对1000000007取模的结果输出。 即输出P%1000000007
+输入描述:
+
+题目保证输入的数组中没有的相同的数字
+
+数据范围：
+
+	对于%50的数据,size<=10^4
+
+	对于%75的数据,size<=10^5
+
+	对于%100的数据,size<=2*10^5
+```
+主要运用归并排序的思想。
+
+先把数组分隔成子数组，统计出子数组内部逆序对的数目，然后再统计出两个相邻子数组之间的逆序对数目。
+
+{% highlight C++ linenos %}
+class Solution {
+public:
+    int InversePairs(vector<int> data) {
+        int n = data.size();
+        if(n == 0) return 0;
+
+        //排序的辅助数组
+        vector<int> copy;
+        for(int i = 0; i < n; i++){
+            copy.push_back(data[i]);
+        }
+        return inverseHelper(data,copy,0,n-1)%1000000007;
+    }
+
+    long inverseHelper(vector<int> & data, vector<int> &copy,int begin,int end){
+        //若指向同一位置，则没有逆序对
+        if(begin == end){
+            copy[begin] = data[end];
+            return 0;
+        }
+
+        int mid = (begin + end) / 2;
+        //是左半边有序，并返回左半段逆序对数目
+        long left = inverseHelper(copy,data,begin,mid);
+        long right = inverseHelper(copy,data,mid+1,end);
+
+        int i = mid;//左半段最后一个数字的下标
+        int j = end;
+        int indexcopy = end;//辅助复制数组最后一个数字下标
+        long count = 0;
+
+        while(i >= begin && j >= mid+1){
+            if(data[i] > data[j]){
+                copy[indexcopy--] = data[i--];
+                count += j-mid;
+            }else{
+                copy[indexcopy--] = data[j--];
+            }
+        }
+        for(;i >= begin;--i){
+            copy[indexcopy--] = data[i];
+        }
+        for(;j >= mid+1; --j){
+            copy[indexcopy--] = data[j];
+        }
+
+        return left + right + count;
+    }
+};
+{% endhighlight %}
+
+## 数字在排序数组中出现的次数
+
+题目描述：
+```
+统计一个数字在排序数组中出现的次数，比如排序数组为{1,2,3,3,3,4,5}，那么数字3出现的次数就是3。
+```
+
+最简单的遍历数组计算个数，时间复杂度为O(n)
+
+如果用二分法找到一个3，再向数组两端遍历。看似很好，但如果刚好有n个3,所以本质上的复杂度仍然是O(n)
+
+其实还可以采用二分法分别找到第一个和最后一个3的位置，即可求出个数。
+
+{% highlight C++ linenos %}
+class Solution {
+public:
+    int GetNumberOfK(vector<int> data ,int k) {
+        int n = data.size();
+        if(n <= 0)
+            return 0;
+        
+        int first = findFirst(data,k,0,n-1);
+        int last = findLast(data,k,0,n-1);
+        
+        if(first != -1 && last != -1)
+            return last-first+1;
+        
+        return 0;
+    }
+    
+    int findFirst(vector<int> &data,int k, int start,int end){
+        if(start > end)
+            return -1;
+        
+        int mid = start + (end-start)/2;
+        if(data[mid]==k){
+            if((mid > 0 && data[mid-1] != k)||mid == 0)
+                return mid;
+            else
+                end = mid-1;
+        }else if(data[mid] > k)
+            end = mid-1;
+        else
+            start = mid + 1;
+        
+        return findFirst(data,k,start,end);
+    }
+    
+    int findLast(vector<int> &data,int k, int start,int end){
+        int mid = start + (end-start)/2;
+        while(start <= end){
+        if(data[mid]==k){
+            if((mid < data.size()-1 && data[mid+1] != k)||mid == data.size()-1)
+                return mid;
+            else
+                start = mid+1;
+        }else if(data[mid] > k)
+            end = mid-1;
+        else
+            start = mid + 1;
+        
+        mid = mid = start + (end-start)/2;
+        }
+        return -1;
+    }
+};
+{% endhighlight %}

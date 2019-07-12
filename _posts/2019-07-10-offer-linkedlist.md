@@ -133,56 +133,100 @@ public:
 {% endhighlight %}
 
 
-# 字符串
+## 两个链表的第一个公共结点
 
-## 字符串的排列
 题目描述：
 ```
-输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc，则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
-
-输入描述：
-
-输入一个字符串,长度不超过9(可能有字符重复)，字符只包括大小写字母。
+输入两个链表，找出它们的第一个公共结点。
 ```
-解题思路：
 
-我们求整个字符串的排列，可以看成两步：首先求所有可能出现在第一个位置的字符，即把第一个字符和后面所有的字符交换。
-
-首先固定第一个字符，求后面所有字符的排列。这个时候我们仍把后面的所有字符分为两部分：后面的字符的第一个字符，以及这个字符之后的所有字符。然后把第一个字符逐一和它后面的字符交换。
-
-这个思路，是典型的递归思路。
+解法一：
 {% highlight C++ linenos %}
+/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
 class Solution {
 public:
-    vector<string> Permutation(string str) {
-        //判断输入
-        if(str.length() == 0){
-            return result;
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(pHead1 == NULL || pHead2 == NULL)
+            return NULL;
+        
+        stack<ListNode*> s1,s2;
+        while(pHead1!=NULL){
+            s1.push(pHead1);
+            pHead1 = pHead1->next;
         }
-        PermutationCore(str, 0);
-        //对结果进行排序
-        sort(result.begin(), result.end());
-        return result;
+        while(pHead2!=NULL){
+            s2.push(pHead2);
+            pHead2 = pHead2->next;
+        }
+        
+        ListNode *res = NULL;
+        while(!s1.empty()&&!s2.empty()){
+            if(s1.top()==s2.top())
+                res = s1.top();
+            s1.pop();
+            s2.pop();
+        }
+        return res;
+    }
+};
+{% endhighlight %}
+
+解法二：
+{% highlight C++ linenos %}
+/*
+struct ListNode {
+	int val;
+	struct ListNode *next;
+	ListNode(int x) :
+			val(x), next(NULL) {
+	}
+};*/
+class Solution {
+public:
+    ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        if(pHead1 == NULL || pHead2 == NULL)
+            return NULL;
+        
+        unsigned int l1 = getLength(pHead1);
+        unsigned int l2 = getLength(pHead2);
+        
+        ListNode* plong = pHead1;
+        ListNode* pshort = pHead2;
+        int gap = l1-l2;
+        if(l1 < l2){
+            plong = pHead2;
+            pshort = pHead1;
+            gap = l2-l1;
+        }
+        for(int i = 0; i < gap; i++){
+            plong = plong->next;
+        }
+        
+        while(plong!=NULL && pshort !=NULL&& plong!=pshort){
+            plong = plong->next;
+            pshort = pshort->next;
+        }
+        
+        return plong;
     }
     
-private:
-    void PermutationCore(string str, int begin){
-        //递归结束的条件：第一位和最后一位交换完成
-        if(begin == str.length()){
-            result.push_back(str);
-            return;
+    unsigned int getLength(ListNode* pHead){
+        if(pHead == NULL)
+            return 0;
+        
+        unsigned int res = 0;
+        while(pHead!=NULL){
+            pHead = pHead->next;
+            res++;
         }
-        for(int i = begin; i < str.length(); i++){
-            //如果字符串相同，则不交换
-            if(i != begin && str[i] == str[begin]){
-                continue;
-            }
-            //位置交换
-            swap(str[begin], str[i]);
-            //递归调用，前面begin+1的位置不变，后面的字符串全排列
-            PermutationCore(str, begin + 1);
-        }
+        return res;
     }
-    vector<string> result;
 };
 {% endhighlight %}
